@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
+using UWPApp.Utils;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Popups;
@@ -63,8 +64,9 @@ namespace UWPApp
     </head>
     <body>
         <form method=""POST"">
+            <h2>Hello! What's your name?</h2>
             <input name=""name""></input>
-            <button type=""submit"">Test</button>
+            <button type=""submit"">Send</button>
         </form>
     </body>
 </html>");
@@ -81,7 +83,9 @@ namespace UWPApp
 
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
                 {
-                    var dialog = new MessageDialog(content);
+                    var data = HttpUtility.ParseQueryString(content);
+
+                    var dialog = new MessageDialog($"Hi, {data["name"]}! Nice to meet you.");
                     await dialog.ShowAsync();
                 });
             }

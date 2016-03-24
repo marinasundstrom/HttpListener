@@ -135,6 +135,9 @@
     <Compile Include="..\System.Net.Http.HttpListener\HttpResponseStatusCodeExtensions.cs">
       <Link>HttpResponseStatusCodeExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\System.Net.Http.HttpListener\HttpUtility.cs">
+      <Link>HttpUtility.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\System.Net.Http.HttpListener.UWP.rd.xml" />
   </ItemGroup>
