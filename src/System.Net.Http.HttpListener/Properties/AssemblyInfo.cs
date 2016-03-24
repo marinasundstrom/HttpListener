@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("System.Net.Http.HttpListener")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("HttpListener for .NET Core (DNX)")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Robert Sundström")]
 [assembly: AssemblyProduct("System.Net.Http.HttpListener")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCopyright("Copyright © Robert Sundström 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

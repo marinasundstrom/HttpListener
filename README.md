@@ -1,4 +1,4 @@
-﻿# HttpListener for .NET Core
+﻿# HttpListener for .NET Core and UWP
 
 This is a library that fills the void for the missing System.Net.Http.HttpListener in .NET Core and Universal Windows Platform (UWP).
 
