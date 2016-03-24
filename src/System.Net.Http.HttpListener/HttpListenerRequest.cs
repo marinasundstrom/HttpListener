@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Abstractions;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,23 +10,23 @@ namespace System.Net.Http
 {
     public class HttpListenerRequest
     {
-        private TcpClient client;
+        private TcpClientAdapter client;
 
         internal HttpListenerRequest()
         {
             Headers = new Dictionary<string, object>();
         }
 
-        internal async Task ProcessAsync(TcpClient client)
+        internal async Task ProcessAsync(TcpClientAdapter client)
         {
             this.client = client;
 
-            var reader = new StreamReader(client.GetStream());
+            var reader = new StreamReader(client.GetInputStream());
 
             StringBuilder request = await ReadRequest(reader);
 
-            var localEndpoint = client.Client.LocalEndPoint;
-            var remoteEnpoint = client.Client.RemoteEndPoint;
+            var localEndpoint = client.LocalEndPoint;
+            var remoteEnpoint = client.RemoteEndPoint;
 
 
             // This code needs to be rewritten and simplified.

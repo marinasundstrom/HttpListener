@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Abstractions;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
+#if WINDOWS_UWP || UAP10_0
+using Windows.Networking.Sockets;
+#endif
 namespace System.Net.Http
 {
     public sealed class HttpListener : IDisposable
     {
         Task _listener;
-        private TcpListener _tcpListener;
+        private TcpListenerAdapter _tcpListener;
         CancellationTokenSource _cts;
         private bool disposedValue = false; // To detect redundant calls
         private bool _isListening;
@@ -27,12 +31,12 @@ namespace System.Net.Http
                 address,
                 port);
 
-           _tcpListener = new TcpListener(LocalEndpoint);
+           _tcpListener = new TcpListenerAdapter(LocalEndpoint);
         }
 
         public HttpListener(IPEndPoint endpoint) : this()
         {
-            _tcpListener = new TcpListener(LocalEndpoint);
+            _tcpListener = new TcpListenerAdapter(LocalEndpoint);
         }
 
         public bool IsListening
@@ -43,13 +47,29 @@ namespace System.Net.Http
             }
         }
 
+#if DNXCORE50
+
         public Socket Socket
         {
             get
             {
-                return _tcpListener.Server;
+                return _tcpListener.Socket;
             }
         }
+
+#endif
+
+#if WINDOWS_UWP || UAP10_0
+
+        public StreamSocketListener StreamSocketListener
+        {
+            get
+            {
+                return _tcpListener.StreamSocketListener;
+            }
+        }
+
+#endif
 
         public IPEndPoint LocalEndpoint
         {
@@ -74,7 +94,12 @@ namespace System.Net.Http
         {
             try
             {
+#if DNXCORE50
                 _tcpListener.Start();
+#endif
+#if WINDOWS_UWP || UAP10_0
+                await _tcpListener.StartAsync();
+#endif
                 while (_isListening)
                 {
                     var client = await _tcpListener.AcceptTcpClientAsync();
@@ -122,6 +147,7 @@ namespace System.Net.Http
             _cts.Cancel();
             _cts = null;
             _isListening = false;
+            _tcpListener.Stop();
         }
 
         public Task<HttpListenerContext> GetContextAsync()
@@ -142,7 +168,7 @@ namespace System.Net.Http
 
         public event EventHandler<HttpListenerRequestEventArgs> Request;
 
-        #region IDisposable Support
+#region IDisposable Support
 
         void Dispose(bool disposing)
         {
@@ -176,7 +202,7 @@ namespace System.Net.Http
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
         }
-        #endregion
+#endregion
     }
 
     public class HttpListenerContext

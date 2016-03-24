@@ -1,23 +1,21 @@
 {
-  "version": "1.0.0-*",
-  "description": "System.Net.Http.HttpListener Class Library",
   "authors": [ "rober" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
   "dependencies": {
-    "System.Net.Sockets": "4.0.10-beta-23516",
+    "System.Net.Sockets": "4.1.0-beta-23516",
     "System.Linq": "4.0.1-beta-23225",
     "System.Runtime": "4.0.21-beta-23516",
     "System.Runtime.InteropServices": "4.0.21-beta-23516",
     "System.Net.Primitives": "4.0.11-beta-23516",
-    "System.Private.Networking": "4.0.1-beta-23516",
+    "System.Private.Networking": "4.0.1-beta-23516"
   },
+  "description": "System.Net.Http.HttpListener Class Library",
   "frameworks": {
     "dnxcore50": {
-      "dependencies": {
 
-      }
     }
-  }
+  },
+  "licenseUrl": "",
+  "projectUrl": "",
+  "tags": [ "" ],
+  "version": "1.0.0-*"
 }

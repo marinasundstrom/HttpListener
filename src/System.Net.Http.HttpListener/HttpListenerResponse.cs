@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Net.Http.Abstractions;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,9 +9,9 @@ namespace System.Net.Http
 {
     public class HttpListenerResponse : IDisposable
     {
-        private TcpClient client;
+        private TcpClientAdapter client;
 
-        internal HttpListenerResponse(HttpListenerRequest request, TcpClient client)
+        internal HttpListenerResponse(HttpListenerRequest request, TcpClientAdapter client)
         {
             Headers = new Dictionary<string, object>();
 
@@ -71,7 +72,7 @@ namespace System.Net.Http
             }
         }
 
-        public Uri RedirectLocation
+        public Uri Location
         {
             get
             {
@@ -107,7 +108,7 @@ namespace System.Net.Http
             var outputStream = OutputStream as MemoryStream;
             outputStream.Seek(0, SeekOrigin.Begin);
 
-            var socketStream = client.GetStream();
+            var socketStream = client.GetOutputStream();
 
             string header = $"{ProtocolVersion} {StatusCode} {StatusDescription}\r\n" +
                             MakeHeaders() +
@@ -131,8 +132,27 @@ namespace System.Net.Http
         public async void Close()
         {
             await SendMessage();
-
             client.Dispose();
+        }
+
+        public async Task Redirect(Uri redirectLocation)
+        {
+            var outputStream = client.GetOutputStream();
+
+            StatusCode = 301;
+            StatusDescription = "Moved permanently";
+            Location = redirectLocation;
+
+            string header = $"{ProtocolVersion} {StatusCode} {StatusDescription}\r\n" +
+                            $"Location: {Location}" +
+                            $"Content-Length: 0\r\n" +
+                            "Connection: close\r\n" +
+                            "\r\n";
+
+            byte[] headerArray = Encoding.UTF8.GetBytes(header);
+            await outputStream.WriteAsync(headerArray, 0, headerArray.Length);
+            await outputStream.FlushAsync();
+
         }
 
         #region IDisposable Support
