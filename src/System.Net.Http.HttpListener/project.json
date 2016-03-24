@@ -1,5 +1,12 @@
 {
-  "authors": [ "rober" ],
+  "title": "System.Net.Http.HttpListener",
+  "description": "HttpListener for .NET Core (DNX)",
+  "version": "1.0.0-*",
+  "authors": [ "Robert Sundström" ],
+  "licenseUrl": "https://github.com/robertsundstrom/HttpListener/blob/master/LICENSE.md",
+  "projectUrl": "https://github.com/robertsundstrom/HttpListener",
+  "copyright": "Copyright © Robert Sundström 2016",
+  "tags": [ "Http", "Web Server" ],
   "dependencies": {
     "System.Net.Sockets": "4.1.0-beta-23516",
     "System.Linq": "4.0.1-beta-23225",
@@ -8,14 +15,9 @@
     "System.Net.Primitives": "4.0.11-beta-23516",
     "System.Private.Networking": "4.0.1-beta-23516"
   },
-  "description": "System.Net.Http.HttpListener Class Library",
   "frameworks": {
     "dnxcore50": {
 
     }
-  },
-  "licenseUrl": "",
-  "projectUrl": "",
-  "tags": [ "" ],
-  "version": "1.0.0-*"
+  }
 }
