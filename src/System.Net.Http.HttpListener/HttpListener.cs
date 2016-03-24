@@ -215,5 +215,21 @@ namespace System.Net.Http
             this.request = request;
             this.response = response;
         }
+
+        public HttpListenerRequest Request
+        {
+            get
+            {
+                return request;
+            }
+        }
+
+        public HttpListenerResponse Response
+        {
+            get
+            {
+                return response;
+            }
+        }
     }
 }
