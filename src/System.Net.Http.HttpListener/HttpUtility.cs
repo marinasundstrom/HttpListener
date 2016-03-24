@@ -15,6 +15,22 @@ namespace UWPApp.Utils
 
     public sealed class HttpUtility
     {
+        public static string UrlEncode(string s)
+        {
+            string result;
+            while ((result = Uri.EscapeDataString(s)) != s)
+                s = result;
+            return result;
+        }
+
+        public static string UrlDecode(string s)
+        {
+            string result;
+            while ((result = Uri.UnescapeDataString(s)) != s)
+                s = result;
+            return result;
+        }
+
         public static HttpValueCollection ParseQueryString(string query)
         {
             if (query == null)

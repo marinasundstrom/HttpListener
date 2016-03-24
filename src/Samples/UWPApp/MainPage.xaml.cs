@@ -57,19 +57,13 @@ namespace UWPApp
 
             if (request.HttpMethod == HttpMethods.Get)
             {
-                await response.WriteAsync(
-@"<html>
-    <head>
-        <title>Test</title>
-    </head>
-    <body>
-        <form method=""POST"">
-            <h2>Hello! What's your name?</h2>
-            <input name=""name""></input>
-            <button type=""submit"">Send</button>
-        </form>
-    </body>
-</html>");
+                var content = @"<h2>Hello! What's your name?</h2>
+                                <form method=""POST"">
+                                    <input name=""name""></input>
+                                    <button type=""submit"">Send</button>
+                                </form>";
+
+                await response.WriteAsync(MakeDocument(content));
             }
             else if (request.HttpMethod == HttpMethods.Post)
             {
@@ -79,13 +73,19 @@ namespace UWPApp
                     content = await streamReader.ReadToEndAsync();
                 }
 
-                await response.Redirect(Url);
+                //await response.Redirect(Url);
+
+                var data = HttpUtility.ParseQueryString(content);
+
+                var name = HttpUtility.UrlDecode(data["name"]);
+
+                content = $"<h2>Hi, {name}! Nice to meet you.</h2>";
+
+                await response.WriteAsync(MakeDocument(content));
 
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
                 {
-                    var data = HttpUtility.ParseQueryString(content);
-
-                    var dialog = new MessageDialog($"Hi, {data["name"]}! Nice to meet you.");
+                    var dialog = new MessageDialog($"Hi, {name}! Nice to meet you.");
                     await dialog.ShowAsync();
                 });
             }
@@ -95,6 +95,18 @@ namespace UWPApp
             }
 
             response.Close();
+        }
+
+        private string MakeDocument(object content)
+        {
+return @"<html>
+    <head>
+        <title>Test</title>
+    </head>
+    <body>" +
+        content +
+    @"</body>
+</html>";
         }
 
         ~MainPage()
