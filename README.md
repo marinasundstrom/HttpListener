@@ -27,6 +27,20 @@ On .NET Core it uses .NET:s TcpListener and TcpClient.
 
 On UWP it uses Windows Runtime's StreamSocketListener and StreamSocket.
 
+## Get the package(s)
+
+The latest version that has been release can be found in this NuGet feed:
+
+```
+https://www.myget.org/F/roberts-core-feed/api/v3/index.json
+```
+
+Add this to your Package Sources.
+
+Search for "HttpListener" and the packages "System.Net.Http.HttpListener" and "System.Net.Http.HttpListener.UWP" should show up.
+
+Choose the one that is to your liking.
+
 ## Todo
 
 Here are some things to consider doing in the future:
