@@ -26,9 +26,19 @@ namespace System.Net.Http
             RegisterHandler(httpListener, handler, HttpMethods.Post, null);
         }
 
+        public static void Post(this HttpListener httpListener, Uri uri, HttpListenerRequestHandler handler)
+        {
+            RegisterHandler(httpListener, handler, HttpMethods.Post, uri);
+        }
+
         public static void Put(this HttpListener httpListener, HttpListenerRequestHandler handler)
         {
             RegisterHandler(httpListener, handler, HttpMethods.Put, null);
+        }
+
+        public static void Put(this HttpListener httpListener, Uri uri, HttpListenerRequestHandler handler)
+        {
+            RegisterHandler(httpListener, handler, HttpMethods.Put, uri);
         }
 
         public static void Patch(this HttpListener httpListener, HttpListenerRequestHandler handler)
@@ -36,9 +46,19 @@ namespace System.Net.Http
             RegisterHandler(httpListener, handler, HttpMethods.Patch, null);
         }
 
+        public static void Patch(this HttpListener httpListener, Uri uri, HttpListenerRequestHandler handler)
+        {
+            RegisterHandler(httpListener, handler, HttpMethods.Patch, uri);
+        }
+
         public static void Delete(this HttpListener httpListener, HttpListenerRequestHandler handler)
         {
             RegisterHandler(httpListener, handler, HttpMethods.Delete, null);
+        }
+
+        public static void Delete(this HttpListener httpListener, Uri uri, HttpListenerRequestHandler handler)
+        {
+            RegisterHandler(httpListener, handler, HttpMethods.Delete, uri);
         }
 
         private static void RegisterHandler(HttpListener httpListener, HttpListenerRequestHandler handler, string method, Uri url)

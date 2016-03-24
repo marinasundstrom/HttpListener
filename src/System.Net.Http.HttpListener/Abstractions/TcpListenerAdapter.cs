@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace System.Net.Http.Abstractions
 {
-    public partial class TcpListenerAdapter
+    partial class TcpListenerAdapter
     {
         public TcpListenerAdapter(IPEndPoint localEndpoint)
         {
@@ -23,7 +23,7 @@ namespace System.Net.Http.Abstractions
         }
     }
 
-    public partial class TcpClientAdapter
+    partial class TcpClientAdapter
     {
         public IPEndPoint LocalEndPoint
         {

@@ -129,8 +129,8 @@
     <Compile Include="..\System.Net.Http.HttpListener\HttpListenerResponse.cs">
       <Link>HttpListenerResponse.cs</Link>
     </Compile>
-    <Compile Include="..\System.Net.Http.HttpListener\HttpMethod.cs">
-      <Link>HttpMethod.cs</Link>
+    <Compile Include="..\System.Net.Http.HttpListener\HttpMethods.cs">
+      <Link>HttpMethods.cs</Link>
     </Compile>
     <Compile Include="..\System.Net.Http.HttpListener\HttpResponseStatusCodeExtensions.cs">
       <Link>HttpResponseStatusCodeExtensions.cs</Link>
