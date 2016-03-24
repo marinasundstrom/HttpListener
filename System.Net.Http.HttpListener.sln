@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BAF6783E-A3A1-4DEE-B8A7-5D8F595AAA2F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7A2997AF-7D5D-433B-AE38-CD90071267D0}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "System.Net.Http.HttpListener", "src\System.Net.Http.HttpListener\System.Net.Http.HttpListener.xproj", "{B3FC0C7E-1A6C-4F10-919B-F5D7CCF34643}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Tests", "src\Tests\Tests.xproj", "{227ECAC8-3501-490D-8FC1-28C47868FB3F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B3FC0C7E-1A6C-4F10-919B-F5D7CCF34643}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3FC0C7E-1A6C-4F10-919B-F5D7CCF34643}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3FC0C7E-1A6C-4F10-919B-F5D7CCF34643}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3FC0C7E-1A6C-4F10-919B-F5D7CCF34643}.Release|Any CPU.Build.0 = Release|Any CPU
+		{227ECAC8-3501-490D-8FC1-28C47868FB3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{227ECAC8-3501-490D-8FC1-28C47868FB3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{227ECAC8-3501-490D-8FC1-28C47868FB3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{227ECAC8-3501-490D-8FC1-28C47868FB3F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B3FC0C7E-1A6C-4F10-919B-F5D7CCF34643} = {BAF6783E-A3A1-4DEE-B8A7-5D8F595AAA2F}
+		{227ECAC8-3501-490D-8FC1-28C47868FB3F} = {BAF6783E-A3A1-4DEE-B8A7-5D8F595AAA2F}
+	EndGlobalSection
+EndGlobal
