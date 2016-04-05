@@ -10,6 +10,11 @@ namespace System.Net.Http
         private HttpListenerHeaderValueCollection<string> contentEncoding;
         private Uri location;
 
+        public HttpListenerResponseHeaders(HttpListenerResponse response)
+        {
+            Response = response;
+        }
+
         public Uri Location
         {
             get
@@ -50,6 +55,8 @@ namespace System.Net.Http
                 return contentEncoding;
             }
         }
+
+        internal HttpListenerResponse Response { get; set; }
 
         #endregion
     }

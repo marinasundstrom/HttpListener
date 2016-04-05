@@ -13,7 +13,7 @@ namespace System.Net.Http
 
         internal HttpListenerResponse(HttpListenerRequest request, TcpClientAdapter client)
         {
-            Headers = new HttpListenerResponseHeaders();
+            Headers = new HttpListenerResponseHeaders(this);
 
             this.client = client;
 
@@ -37,14 +37,6 @@ namespace System.Net.Http
         public int StatusCode { get; set; }
 
         public string ReasonPhrase { get; set; }
-
-        public long ContentLength
-        {
-            get
-            {
-                return this.OutputStream.Length;
-            }
-        }
 
         private async Task SendMessage()
         {

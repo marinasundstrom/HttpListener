@@ -14,7 +14,7 @@ namespace System.Net.Http
 
         internal HttpListenerRequest()
         {
-            Headers = new HttpListenerRequestHeaders();
+            Headers = new HttpListenerRequestHeaders(this);
         }
 
         internal async Task ProcessAsync(TcpClientAdapter client)
@@ -66,7 +66,7 @@ namespace System.Net.Http
 
                 char[] buffer = new char[Headers.ContentLength];
 
-                await reader.ReadAsync(buffer, 0, Headers.ContentLength);
+                await reader.ReadAsync(buffer, 0, (int)Headers.ContentLength);
 
                 InputStream = new MemoryStream(encoding.GetBytes(buffer));
             }

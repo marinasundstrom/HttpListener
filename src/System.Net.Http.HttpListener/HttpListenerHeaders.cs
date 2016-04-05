@@ -11,6 +11,9 @@ namespace System.Net.Http
         private string contentMD5;
         private bool? isRequestHeaders;
 
+        private HttpListenerResponse response;
+        private HttpListenerRequest request;
+
         internal void ParseHeaderLines(IEnumerable<string> lines)
         {
             foreach (var headerLine in lines)
@@ -63,16 +66,23 @@ namespace System.Net.Http
             }
         }
 
-        public int ContentLength
+        public long ContentLength
         {
             get
             {
-                string headerValue = string.Empty;
-                if (TryGetValue("Content-Length", out headerValue))
+                if (IsRequestHeaders)
                 {
-                    return int.Parse((string)headerValue);
+                    string headerValue = string.Empty;
+                    if (TryGetValue("Content-Length", out headerValue))
+                    {
+                        return int.Parse((string)headerValue);
+                    }
+                    return -1;
                 }
-                return -1;
+                else
+                {
+                    return this.GetResponse().OutputStream.Length;
+                }
             }
         }
 
@@ -109,6 +119,26 @@ namespace System.Net.Http
         {
             if (IsRequestHeaders)
                 throw new NotSupportedException("This header cannot be set for requests.");
+        }
+
+        private HttpListenerRequest GetRequest()
+        {
+            if (response == null)
+            {
+                var headers = this as HttpListenerRequestHeaders;
+                request = headers.Request;
+            }
+            return request;
+        }
+
+        private HttpListenerResponse GetResponse()
+        {
+            if (response == null)
+            {
+                var headers = this as HttpListenerResponseHeaders;
+                response = headers.Response;
+            }
+            return response;
         }
     }
 }

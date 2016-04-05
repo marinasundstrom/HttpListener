@@ -14,6 +14,11 @@ namespace System.Net.Http
         private DateTime accepDatetime;
         private string host;
 
+        public HttpListenerRequestHeaders(HttpListenerRequest request)
+        {
+            Request = request;
+        }
+
         public string Host
         {
             get
@@ -95,6 +100,8 @@ namespace System.Net.Http
                 return accepDatetime;
             }
         }
+
+        internal HttpListenerRequest Request { get; set; }
 
         #endregion
     }
