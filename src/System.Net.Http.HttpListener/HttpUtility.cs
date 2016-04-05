@@ -7,9 +7,9 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UWPApp.Utils
-
-{   /**
+namespace System.Net.Http
+{   
+    /**
     /* Source: http://stackoverflow.com/questions/20268544/portable-class-library-pcl-version-of-httputility-parsequerystring
     **/
 

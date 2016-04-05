@@ -50,6 +50,9 @@ namespace System.Net.Http.Abstractions
         public TcpClientAdapter(TcpClient tcpClient)
         {
             this.tcpClient = tcpClient;
+
+            LocalEndPoint = (IPEndPoint)tcpClient.Client.LocalEndPoint;
+            RemoteEndPoint = (IPEndPoint)tcpClient.Client.RemoteEndPoint;
         }
 
         public Stream GetInputStream()

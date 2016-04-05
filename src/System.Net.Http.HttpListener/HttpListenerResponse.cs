@@ -7,83 +7,36 @@ using System.Threading.Tasks;
 
 namespace System.Net.Http
 {
-    public class HttpListenerResponse : IDisposable
+    public sealed class HttpListenerResponse : IDisposable
     {
         private TcpClientAdapter client;
 
         internal HttpListenerResponse(HttpListenerRequest request, TcpClientAdapter client)
         {
-            Headers = new Dictionary<string, object>();
+            Headers = new HttpListenerResponseHeaders();
 
             this.client = client;
 
-            Request = request;
+            //Request = request;
 
             OutputStream = new MemoryStream();
 
-            ProtocolVersion = request.ProtocolVersion;
+            Version = request.Version;
             StatusCode = 200;
-            StatusDescription = "OK";
+            ReasonPhrase = "OK";
         }
 
-        public HttpListenerRequest Request { get; private set; }
+        //public HttpListenerRequest Request { get; private set; }
 
-        public IDictionary<string, object> Headers { get; private set; }
+        public HttpListenerResponseHeaders Headers { get; private set; }
 
         public Stream OutputStream { get; private set; }
 
-        public string ProtocolVersion { get; private set; }
+        public string Version { get; set; }
 
         public int StatusCode { get; set; }
 
-        public string StatusDescription { get; set; }
-
-        public bool KeepAlive
-        {
-            get
-            {
-                return Headers?["Connection"].ToString() == "keep-alive";
-            }
-
-            set
-            {
-                if (value)
-                {
-                    Headers["Connection"] = "keep-alive";
-
-                }
-                else
-                {
-                    Headers["Connection"] = "close";
-                }
-            }
-        }
-
-        public string ContentType
-        {
-            get
-            {
-                return Headers?["Content-Type"].ToString();
-            }
-
-            set
-            {
-                Headers["Content-Type"] = value;
-            }
-        }
-
-        public Uri Location
-        {
-            get
-            {
-                return new Uri(Headers?["Location"].ToString());
-            }
-
-            set
-            {
-                Headers["Location"] = value.ToString();
-            }
-        }
+        public string ReasonPhrase { get; set; }
 
         public long ContentLength
         {
@@ -93,16 +46,6 @@ namespace System.Net.Http
             }
         }
 
-        private string MakeHeaders()
-        {
-            var sb = new StringBuilder();
-            foreach (var header in Headers)
-            {
-                sb.Append($"{header.Key}: {header.Value}\r\n");
-            }
-            return sb.ToString();
-        }
-
         private async Task SendMessage()
         {
             var outputStream = OutputStream as MemoryStream;
@@ -110,8 +53,8 @@ namespace System.Net.Http
 
             var socketStream = client.GetOutputStream();
 
-            string header = $"{ProtocolVersion} {StatusCode} {StatusDescription}\r\n" +
-                            MakeHeaders() +
+            string header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
+                            Headers.ToString() +
                             $"Content-Length: {outputStream.Length}\r\n" +
                             "\r\n";
 
@@ -140,11 +83,11 @@ namespace System.Net.Http
             var outputStream = client.GetOutputStream();
 
             StatusCode = 301;
-            StatusDescription = "Moved permanently";
-            Location = redirectLocation;
+            ReasonPhrase = "Moved permanently";
+            Headers.Location = redirectLocation;
 
-            string header = $"{ProtocolVersion} {StatusCode} {StatusDescription}\r\n" +
-                            $"Location: {Location}" +
+            string header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
+                            $"Location: {Headers.Location}" +
                             $"Content-Length: 0\r\n" +
                             "Connection: close\r\n" +
                             "\r\n";
@@ -158,7 +101,7 @@ namespace System.Net.Http
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
-        protected virtual void Dispose(bool disposing)
+        void Dispose(bool disposing)
         {
             if (!disposedValue)
             {

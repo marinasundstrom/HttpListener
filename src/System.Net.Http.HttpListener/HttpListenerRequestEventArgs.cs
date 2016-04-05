@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace System.Net.Http
 {
-    public class HttpListenerRequestEventArgs : EventArgs
+    public sealed class HttpListenerRequestEventArgs : EventArgs
     {
         internal HttpListenerRequestEventArgs(HttpListenerRequest request, HttpListenerResponse response)
         {

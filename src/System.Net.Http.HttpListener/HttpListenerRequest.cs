@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace System.Net.Http
 {
-    public class HttpListenerRequest
+    public sealed class HttpListenerRequest
     {
         private TcpClientAdapter client;
 
         internal HttpListenerRequest()
         {
-            Headers = new Dictionary<string, object>();
+            Headers = new HttpListenerRequestHeaders();
         }
 
         internal async Task ProcessAsync(TcpClientAdapter client)
@@ -40,29 +40,42 @@ namespace System.Net.Http
 
             var lines = request.ToString().Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-            var headers = ParseHeaders(lines);
-            foreach (var header in headers)
+            ParseHeaders(lines);
+            ParseRequestLine(lines);
+
+            await PrepareInputStream(reader);
+        }
+
+        private void ParseRequestLine(string[] lines)
+        {
+            var line = lines.ElementAt(0).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            var url = new UriBuilder(Headers.Host + line[1]).Uri;
+            var httpMethod = line[0];
+
+            Version = line[2];
+            Method = httpMethod;
+            RequestUri = url;
+        }
+
+        private async Task PrepareInputStream(StreamReader reader)
+        {
+            if (Method == HttpMethods.Post || Method == HttpMethods.Put || Method == HttpMethods.Patch)
             {
-                Headers[header.Key] = header.Value;
-            }
+                Encoding encoding = Encoding.UTF8;
 
-            var url = (new UriBuilder(headers["Host"].ToString() + requestParts[1])).Uri;
-            var httpMethod = requestParts[0];
+                char[] buffer = new char[Headers.ContentLength];
 
-            ProtocolVersion = requestParts[2];
-            HttpMethod = httpMethod;
-            Url = url;
-
-            if (HttpMethod == HttpMethods.Post || HttpMethod == HttpMethods.Put || HttpMethod == HttpMethods.Patch)
-            {
-                var encoding = Encoding.UTF8; // GetEncoding(ContentType);
-
-                char[] buffer = new char[ContentLength];
-
-                await reader.ReadAsync(buffer, 0, ContentLength);
+                await reader.ReadAsync(buffer, 0, Headers.ContentLength);
 
                 InputStream = new MemoryStream(encoding.GetBytes(buffer));
             }
+        }
+
+        private void ParseHeaders(IEnumerable<string> lines)
+        {
+            lines = lines.Skip(1);
+            Headers.ParseHeaderLines(lines);
         }
 
         private static async Task<StringBuilder> ReadRequest(StreamReader reader)
@@ -79,98 +92,25 @@ namespace System.Net.Http
             return request;
         }
 
-        IDictionary<string, object> ParseHeaders(IEnumerable<string> lines)
-        {
-
-            var headers = new Dictionary<string, object>();
-
-            foreach (var headerLine in lines.Skip(1))
-            {
-                var parts = headerLine.Split(':');
-                var key = parts[0];
-                var value = parts[1].Trim();
-                headers.Add(key, value);
-            }
-
-            return headers;
-        }
-
-
         public IPEndPoint LocalEndpoint { get; private set; }
 
         public IPEndPoint RemoteEndpoint { get; private set; }
 
-        public Uri Url { get; private set; }
+        public Uri RequestUri { get; private set; }
 
-        public string HttpMethod { get; private set; }
+        public string Method { get; private set; }
 
-        public IDictionary<string, object> Headers { get; private set; }
+        public HttpListenerRequestHeaders Headers { get; private set; }
 
         public Stream InputStream { get; private set; }
 
-        public string ProtocolVersion { get; private set; }
+        public string Version { get; private set; }  
 
-        public string Host
+        public bool IsLocal
         {
             get
             {
-                return Headers?["Host"].ToString();
-            }
-        }
-
-        public bool KeepAlive
-        {
-            get
-            {
-                return Headers?["Connection"].ToString() == "keep-alive";
-            }
-        }
-
-        public string UserAgent
-        {
-            get
-            {
-                return Headers?["User-Agent"].ToString();
-            }
-        }
-
-        public string Accept
-        {
-            get
-            {
-                return Headers?["Accept"].ToString();
-            }
-        }
-
-        public string AcceptEncoding
-        {
-            get
-            {
-                return Headers?["Accept-Encoding"].ToString();
-            }
-        }
-
-        public string AcceptLanguage
-        {
-            get
-            {
-                return Headers?["Accept-Language"].ToString();
-            }
-        }
-
-        public string ContentType
-        {
-            get
-            {
-                return Headers?["Content-Type"].ToString();
-            }
-        }
-
-        public int ContentLength
-        {
-            get
-            {
-                return int.Parse(Headers?["Content-Length"].ToString());
+                return RemoteEndpoint.Address.Equals(LocalEndpoint.Address);
             }
         }
     }

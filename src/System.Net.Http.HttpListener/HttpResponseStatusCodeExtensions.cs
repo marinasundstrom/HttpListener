@@ -9,32 +9,32 @@ namespace System.Net.Http
     {
         public static void NotFound(this HttpListenerResponse response)
         {
-            response.StatusCode = 401;
-            response.StatusDescription = "Not Found";
+            response.StatusCode = 404;
+            response.ReasonPhrase = "Not Found";
         }
 
         public static void InternalServerError(this HttpListenerResponse response)
         {
             response.StatusCode = 500;
-            response.StatusDescription = "Internal Server Error";
+            response.ReasonPhrase = "Internal Server Error";
         }
 
         public static void MethodNotAllowed(this HttpListenerResponse response)
         {
             response.StatusCode = 405;
-            response.StatusDescription = "Method Not Allowed";
+            response.ReasonPhrase = "Method Not Allowed";
         }
 
         public static void NotImplemented(this HttpListenerResponse response)
         {
             response.StatusCode = 501;
-            response.StatusDescription = "Not Implemented";
+            response.ReasonPhrase = "Not Implemented";
         }
 
         public static void Forbidden(this HttpListenerResponse response)
         {
             response.StatusCode = 403;
-            response.StatusDescription = "Forbidden";
+            response.ReasonPhrase = "Forbidden";
         }
 
     }
