@@ -6,7 +6,6 @@ using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
-using UWPApp.Utils;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Popups;
@@ -55,7 +54,7 @@ namespace UWPApp
             var request = e.Request;
             var response = e.Response;
 
-            if (request.HttpMethod == HttpMethods.Get)
+            if (request.Method == HttpMethods.Get)
             {
                 var content = @"<h2>Hello! What's your name?</h2>
                                 <form method=""POST"">
@@ -65,7 +64,7 @@ namespace UWPApp
 
                 await response.WriteAsync(MakeDocument(content));
             }
-            else if (request.HttpMethod == HttpMethods.Post)
+            else if (request.Method == HttpMethods.Post)
             {
                 string content = null;
                 using (var streamReader = new StreamReader(request.InputStream))
