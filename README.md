@@ -1,10 +1,10 @@
 ﻿# HttpListener for .NET Core and UWP
 
-A simple library that essentially allows for building your own HTTP server.
+A simple library that essentially allows for building your own HTTP server on .NET Core and the Universal Windows Platform (UWP).
 
 ## Overview
 
-This library that fills the void for the missing System.Net.Http.HttpListener in .NET Core and Universal Windows Platform (UWP).
+This library fills the void for the missing System.Net.Http.HttpListener in .NET Core and Universal Windows Platform (UWP).
 
 By targetting .NET Core and UWP, this API enables HTTP server scenarios on Windows 10 for IoT on Raspberry Pi (2 & 3).
 
@@ -32,7 +32,7 @@ On UWP it uses Windows Runtime's StreamSocketListener and StreamSocket.
 The latest version that has been release can be found in this NuGet feed:
 
 ```
-https://www.myget.org/F/roberts-core-feed/api/v3/index.json
+https://www.myget.org/F/http-listener/api/v3/index.json
 ```
 
 Add this to your Package Sources.
@@ -50,45 +50,43 @@ Here are some things to consider doing in the future:
 
 ## Sample
 
-This sample should be the same on any platform:
+Add the using statement.
 
 ```CSharp
-using System;
+...
 using System.Net.Http;
+```
 
-class Program 
+The code used in this sample should be the same on any platform.
+
+```CSharp
+var listener = new HttpListener(IPAddress.Parse("127.0.0.1"), 8081);
+try 
 {
-    static void Main(string[] args)
-    {
-        var listener = new HttpListener(IPAddress.Parse("127.0.0.1"), 8081);
-        try 
-        {
-            listener.Request += async (sender, context) => {
-                var request = context.Request;
-                var response = context.Response;
-                if(request.HttpMethod == HttpMethod.Get) 
-                {
-                    await response.WriteAsync($"Hello from Server at: {DateTime.Now}\r\n");
-                }
-                else
-                {
-                    response.MethodNotAllowed();
-                }
-            };
-            listener.Start();
+	listener.Request += async (sender, context) => {
+		var request = context.Request;
+		var response = context.Response;
+		if(request.Method == HttpMethod.Get) 
+		{
+			await response.WriteAsync($"Hello from Server at: {DateTime.Now}\r\n");
+		}
+		else
+		{
+			response.MethodNotAllowed();
+		}
+	};
+	listener.Start();
 
-            Console.WriteLine("Press any key to exit.");
-            Console.ReadKey();
-        }
-        catch(Exception exc) 
-        {
-            Console.WriteLine(exc.ToString());
-        }
-        finally 
-        {
-            listener.Close();
-        }
-    }
+	Console.WriteLine("Press any key to exit.");
+	Console.ReadKey();
+}
+catch(Exception exc) 
+{
+	Console.WriteLine(exc.ToString());
+}
+finally 
+{
+	listener.Close();
 }
 ```
 
