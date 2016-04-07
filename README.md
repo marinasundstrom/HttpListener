@@ -8,7 +8,7 @@ This library fills the void for the missing System.Net.Http.HttpListener in .NET
 
 By targetting .NET Core and UWP, this API enables HTTP server scenarios on Windows 10 for IoT on Raspberry Pi (2 & 3).
 
-Taking a modern approach, this API is not meant to be entirely compatible with the HttpListener found in the .NET Framework on the desktop.
+Taking a modern approach, this API is not meant to be entirely compatible with the HttpListener found in the full .NET Framework on Windows desktop.
 
 Please, be aware that this is an early concept, and thus not ready for production.
 
