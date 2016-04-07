@@ -45,7 +45,7 @@ Choose the one that is to your liking.
 
 Here are some things to consider doing in the future:
 
-* Rewrite the HttpRequest parser and implement missing features, like authorization and the handling of content types.
+* Rewrite the HttpRequest parser and implement missing features, like authentication and the handling of content types.
 * Consolidate the two libraries (DNXCore and UWP) into one Portable library, if and when possible. (When .NET Core Platform is ready)
 
 ## Sample
