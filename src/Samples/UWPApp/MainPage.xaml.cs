@@ -57,7 +57,7 @@ namespace UWPApp
             if (request.Method == HttpMethods.Get)
             {
                 var content = @"<h2>Hello! What's your name?</h2>
-                                <form method=""POST"">
+                                <form method=""POST"" action=""/?test=2"">
                                     <input name=""name""></input>
                                     <button type=""submit"">Send</button>
                                 </form>";
@@ -66,6 +66,8 @@ namespace UWPApp
             }
             else if (request.Method == HttpMethods.Post)
             {
+                var param = request.RequestUri.ParseQueryParameters();
+
                 var data = await request.ReadUrlEncodedContentAsync();
                 var name = data["name"];
 
