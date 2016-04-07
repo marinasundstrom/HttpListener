@@ -62,25 +62,16 @@ namespace UWPApp
                                     <button type=""submit"">Send</button>
                                 </form>";
 
-                await response.WriteAsync(MakeDocument(content));
+                await response.WriteContentAsync(MakeDocument(content));
             }
             else if (request.Method == HttpMethods.Post)
             {
-                string content = null;
-                using (var streamReader = new StreamReader(request.InputStream))
-                {
-                    content = await streamReader.ReadToEndAsync();
-                }
+                var data = await request.ReadUrlEncodedContentAsync();
+                var name = data["name"];
 
-                //await response.Redirect(Url);
+                var content = $"<h2>Hi, {name}! Nice to meet you.</h2>";
 
-                var data = HttpUtility.ParseQueryString(content);
-
-                var name = HttpUtility.UrlDecode(data["name"]);
-
-                content = $"<h2>Hi, {name}! Nice to meet you.</h2>";
-
-                await response.WriteAsync(MakeDocument(content));
+                await response.WriteContentAsync(MakeDocument(content));
 
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
                 {
@@ -98,14 +89,14 @@ namespace UWPApp
 
         private string MakeDocument(object content)
         {
-return @"<html>
-    <head>
-        <title>Test</title>
-    </head>
-    <body>" +
-        content +
-    @"</body>
-</html>";
+            return @"<html>
+                        <head>
+                            <title>Test</title>
+                        </head>
+                        <body>" +
+                            content +
+                        @"</body>
+                    </html>";
         }
 
         ~MainPage()

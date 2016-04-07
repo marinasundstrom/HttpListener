@@ -16,26 +16,43 @@ namespace System.Net.Http
             Headers = new HttpListenerResponseHeaders(this);
 
             this.client = client;
+            this.Request = request;
+        }
 
-            //Request = request;
-
+        internal void Initialize()
+        {
             OutputStream = new MemoryStream();
 
-            Version = request.Version;
+            Version = Request.Version;
             StatusCode = 200;
             ReasonPhrase = "OK";
         }
 
-        //public HttpListenerRequest Request { get; private set; }
+        HttpListenerRequest Request { get; set; }
 
+        /// <summary>
+        /// Gets the headers of the HTTP response.
+        /// </summary>
         public HttpListenerResponseHeaders Headers { get; private set; }
 
+        /// <summary>
+        /// Gets the stream containing the content of this response.
+        /// </summary>
         public Stream OutputStream { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the HTTP version.
+        /// </summary>
         public string Version { get; set; }
 
+        /// <summary>
+        /// Gets or sets the HTTP status code.
+        /// </summary>
         public int StatusCode { get; set; }
 
+        /// <summary>
+        /// Gets or sets the HTTP reason phrase.
+        /// </summary>
         public string ReasonPhrase { get; set; }
 
         private async Task SendMessage()
@@ -58,19 +75,37 @@ namespace System.Net.Http
 
         }
 
-        public Task WriteAsync(string text)
+        /// <summary>
+        /// Writes a string to OutputStream.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public Task WriteContentAsync(string text)
         {
             var buffer = Encoding.UTF8.GetBytes(text);
             return OutputStream.WriteAsync(buffer, 0, buffer.Length);
         }
 
+        /// <summary>
+        /// Closes this response and sends it.
+        /// </summary>
         public async void Close()
         {
             await SendMessage();
+            CloseSocket();
+        }
+
+        internal void CloseSocket()
+        {
             client.Dispose();
         }
 
-        public async Task Redirect(Uri redirectLocation)
+        /// <summary>
+        /// Writes a HTTP redirect response.
+        /// </summary>
+        /// <param name="redirectLocation"></param>
+        /// <returns></returns>
+        public async Task RedirectAsync(Uri redirectLocation)
         {
             var outputStream = client.GetOutputStream();
 

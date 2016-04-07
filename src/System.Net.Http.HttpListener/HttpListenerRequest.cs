@@ -12,22 +12,21 @@ namespace System.Net.Http
     {
         private TcpClientAdapter client;
 
-        internal HttpListenerRequest()
-        {
-            Headers = new HttpListenerRequestHeaders(this);
-        }
-
-        internal async Task ProcessAsync(TcpClientAdapter client)
+        internal HttpListenerRequest(TcpClientAdapter client)
         {
             this.client = client;
 
+            Headers = new HttpListenerRequestHeaders(this);
+        }
+
+        internal async Task ProcessAsync()
+        {
             var reader = new StreamReader(client.GetInputStream());
 
             StringBuilder request = await ReadRequest(reader);
 
             var localEndpoint = client.LocalEndPoint;
             var remoteEnpoint = client.RemoteEndPoint;
-
 
             // This code needs to be rewritten and simplified.
 
@@ -64,9 +63,11 @@ namespace System.Net.Http
             {
                 Encoding encoding = Encoding.UTF8;
 
-                char[] buffer = new char[Headers.ContentLength];
+                var contentLength = (int)Headers.ContentLength;
 
-                await reader.ReadAsync(buffer, 0, (int)Headers.ContentLength);
+                char[] buffer = new char[contentLength];
+
+                await reader.ReadAsync(buffer, 0, contentLength);
 
                 InputStream = new MemoryStream(encoding.GetBytes(buffer));
             }
@@ -92,26 +93,62 @@ namespace System.Net.Http
             return request;
         }
 
+        /// <summary>
+        /// Gets the endpoint of the listener that received the request.
+        /// </summary>
         public IPEndPoint LocalEndpoint { get; private set; }
 
+        /// <summary>
+        /// Gets the endpoint that sent the request.
+        /// </summary>
         public IPEndPoint RemoteEndpoint { get; private set; }
 
+        /// <summary>
+        /// Gets the URI send with the request.
+        /// </summary>
         public Uri RequestUri { get; private set; }
 
+        /// <summary>
+        /// Gets the HTTP method.
+        /// </summary>
         public string Method { get; private set; }
 
+        /// <summary>
+        /// Gets the headers of the HTTP request.
+        /// </summary>
         public HttpListenerRequestHeaders Headers { get; private set; }
 
+        /// <summary>
+        /// Gets the stream containing the content sent with the request.
+        /// </summary>
         public Stream InputStream { get; private set; }
 
+        /// <summary>
+        /// Gets the HTTP version.
+        /// </summary>
         public string Version { get; private set; }  
 
+        /// <summary>
+        /// Gets a value indicating whether the request was sent locally or not.
+        /// </summary>
         public bool IsLocal
         {
             get
             {
                 return RemoteEndpoint.Address.Equals(LocalEndpoint.Address);
             }
+        }
+
+        /// <summary>
+        /// Reads the content of the request as a string.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<string> ReadContentAsStringAsync()
+        {
+            var length = InputStream.Length;
+            byte[] buffer = new byte[length];
+            await InputStream.ReadAsync(buffer, 0, (int)length);
+            return Encoding.UTF8.GetString(buffer);
         }
     }
 }

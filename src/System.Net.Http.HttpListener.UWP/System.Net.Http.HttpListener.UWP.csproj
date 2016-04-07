@@ -128,6 +128,9 @@
     <Compile Include="..\System.Net.Http.HttpListener\HttpListenerRequestEventArgs.cs">
       <Link>HttpListenerRequestEventArgs.cs</Link>
     </Compile>
+    <Compile Include="..\System.Net.Http.HttpListener\HttpListenerRequestExtensions.cs">
+      <Link>HttpListenerRequestExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\System.Net.Http.HttpListener\HttpListenerRequestHeaders.cs">
       <Link>HttpListenerRequestHeaders.cs</Link>
     </Compile>

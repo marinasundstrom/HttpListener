@@ -7,11 +7,17 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+
 #if WINDOWS_UWP || UAP10_0
 using Windows.Networking.Sockets;
 #endif
 namespace System.Net.Http
 {
+    /// <summary>
+    /// Listenes for Http requests.
+    /// </summary>
     public sealed class HttpListener : IDisposable
     {
         Task _listener;
@@ -25,20 +31,31 @@ namespace System.Net.Http
             _cts = null;
         }
 
+        /// <summary>
+        /// Initializes a HttpListener.
+        /// </summary>
+        /// <param name="endpoint"></param>
         public HttpListener(IPAddress address, int port) : this()
         {
-           LocalEndpoint = new IPEndPoint(
-                address,
-                port);
+            LocalEndpoint = new IPEndPoint(
+                 address,
+                 port);
 
-           _tcpListener = new TcpListenerAdapter(LocalEndpoint);
+            _tcpListener = new TcpListenerAdapter(LocalEndpoint);
         }
 
+        /// <summary>
+        /// Initializes a HttpListener with an IPEndPoint.
+        /// </summary>
+        /// <param name="endpoint"></param>
         public HttpListener(IPEndPoint endpoint) : this()
         {
             _tcpListener = new TcpListenerAdapter(LocalEndpoint);
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the HttpListener is running or not.
+        /// </summary>
         public bool IsListening
         {
             get
@@ -49,6 +66,9 @@ namespace System.Net.Http
 
 #if DNXCORE50
 
+        /// <summary>
+        /// Gets the underlying Socket.
+        /// </summary>
         public Socket Socket
         {
             get
@@ -61,6 +81,9 @@ namespace System.Net.Http
 
 #if WINDOWS_UWP || UAP10_0
 
+        /// <summary>
+        /// Gets the underlying StreamSocketListener.
+        /// </summary>
         public StreamSocketListener StreamSocketListener
         {
             get
@@ -71,12 +94,18 @@ namespace System.Net.Http
 
 #endif
 
+        /// <summary>
+        /// Gets the local endpoint on which the listener is running.
+        /// </summary>
         public IPEndPoint LocalEndpoint
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Starts the listener.
+        /// </summary>
         public void Start()
         {
             if (disposedValue)
@@ -102,30 +131,46 @@ namespace System.Net.Http
 #endif
                 while (_isListening)
                 {
+                    // Await request.
+
                     var client = await _tcpListener.AcceptTcpClientAsync();
 
-                    // Set up context.
+                    var request = new HttpListenerRequest(client);
 
-                    var request = new HttpListenerRequest();
-                    await request.ProcessAsync(client);
+                    // Handle request in a separate thread.
 
-                    var response = new HttpListenerResponse(request, client);
-
-                    if (Request == null)
+                    Task.Run(async () =>
                     {
-                        // No Request handlers exist. Respond with "Not Found".
+                        // Process request.
 
-                        response.NotFound();
-                        response.Close();
-                    }
-                    else
-                    {
-                        // Invoke Request handlers.
+                        var response = new HttpListenerResponse(request, client);
 
-                        Request(this, new HttpListenerRequestEventArgs(request, response));
-                    }
+                        try
+                        {
+                            await request.ProcessAsync();
+
+                            response.Initialize();
+
+                            if (Request == null)
+                            {
+                                // No Request handlers exist. Respond with "Not Found".
+
+                                response.NotFound();
+                                response.Close();
+                            }
+                            else
+                            {
+                                // Invoke Request handlers.
+
+                                Request(this, new HttpListenerRequestEventArgs(request, response));
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            response.CloseSocket();
+                        }
+                    });
                 }
-
             }
             catch (Exception)
             {
@@ -138,6 +183,9 @@ namespace System.Net.Http
             }
         }
 
+        /// <summary>
+        /// Closes the listener.
+        /// </summary>
         public void Close()
         {
             if (_cts == null)
@@ -150,12 +198,16 @@ namespace System.Net.Http
             _tcpListener.Stop();
         }
 
+        /// <summary>
+        /// Awaits the next HTTP request and returns its context.
+        /// </summary>
+        /// <returns></returns>
         public Task<HttpListenerContext> GetContextAsync()
         {
             // Await a Request and return the context to caller.
 
             var tcs = new TaskCompletionSource<HttpListenerContext>();
-            EventHandler<HttpListenerRequestEventArgs> requestHandler = null; 
+            EventHandler<HttpListenerRequestEventArgs> requestHandler = null;
             requestHandler = (sender, evArgs) =>
             {
                 var context = new HttpListenerContext(evArgs.Request, evArgs.Response);
@@ -168,7 +220,7 @@ namespace System.Net.Http
 
         public event EventHandler<HttpListenerRequestEventArgs> Request;
 
-#region IDisposable Support
+        #region IDisposable Support
 
         void Dispose(bool disposing)
         {
@@ -202,7 +254,7 @@ namespace System.Net.Http
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
         }
-#endregion
+        #endregion
     }
 
     public class HttpListenerContext
@@ -233,3 +285,6 @@ namespace System.Net.Http
         }
     }
 }
+
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed

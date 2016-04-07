@@ -81,7 +81,8 @@ namespace System.Net.Http
                 }
                 else
                 {
-                    return this.GetResponse().OutputStream.Length;
+                    var response = this.GetResponse();
+                    return response.OutputStream.Length;
                 }
             }
         }
@@ -109,7 +110,7 @@ namespace System.Net.Http
             {
                 if (isRequestHeaders == null)
                 {
-                    isRequestHeaders = GetType() == typeof(HttpListenerRequest);
+                    isRequestHeaders = this is HttpListenerRequestHeaders;
                 }
                 return isRequestHeaders.GetValueOrDefault();
             }
