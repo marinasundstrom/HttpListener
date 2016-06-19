@@ -74,6 +74,8 @@ try
 		{
 			response.MethodNotAllowed();
 		}
+		// Close the HttpResponse to send it back to the client.
+		response.Close();
 	};
 	listener.Start();
 
@@ -91,3 +93,5 @@ finally
 ```
 
 Visit 127.0.0.1:8081 in your browser.
+
+Also consider having a look at the unit tests.
