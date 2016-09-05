@@ -4,7 +4,7 @@ A simple library that essentially allows for building your own HTTP server on .N
 
 ## Overview
 
-This library fills the void for the missing System.Net.Http.HttpListener in .NET Core and Universal Windows Platform (UWP).
+This library fills the void left by the missing System.Net.Http.HttpListener in .NET Core and Universal Windows Platform (UWP).
 
 By targetting .NET Core and UWP, this API enables HTTP server scenarios on Windows 10 for IoT on Raspberry Pi (2 & 3).
 
@@ -21,7 +21,7 @@ The solution consists of two projects with a common core targetting:
 1. .NET Core project (DNXCore) - Windows, Linux and Mac OS X.
 2. Universal Windows Platform (UWP) - Windows 10 and up.
 
-The API:s are generally similar, but may differ slightly from platform to platform due to their respective API constraints. However, the core concepts remain the same.
+The API:s are generally similar, but may differ slightly on each platform due to their respective API constraints. However, the core concepts remain the same.
 
 On .NET Core it uses .NET:s TcpListener and TcpClient.
 
