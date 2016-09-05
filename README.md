@@ -32,7 +32,7 @@ On UWP it uses Windows Runtime's StreamSocketListener and StreamSocket.
 The latest version that has been release can be found in this NuGet feed:
 
 ```
-https://www.myget.org/F/portable-http-listener/api/v3/index.json
+https://www.myget.org/F/roberts-core-feed/api/v3/index.json
 ```
 
 Add this to your Package Sources.
