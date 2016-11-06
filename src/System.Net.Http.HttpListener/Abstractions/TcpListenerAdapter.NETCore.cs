@@ -1,4 +1,4 @@
-﻿#if DNXCORE50
+﻿#if NETCore
 
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,4 @@
-﻿#if WINDOWS_UWP || UAP10_0
+﻿#if WINDOWS_UWP
 
 using System;
 using System.Collections.Generic;

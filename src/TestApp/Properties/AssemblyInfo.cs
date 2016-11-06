@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("System.Net.Http.HttpListener")]
-[assembly: AssemblyDescription("HttpListener for the Universal Windows Platform (UWP)")]
+[assembly: AssemblyTitle("TestApp")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Robert Sundström")]
-[assembly: AssemblyProduct("System.Net.Http.HttpListener.UWP")]
-[assembly: AssemblyCopyright("Copyright © Robert Sundström 2016")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("TestApp")]
+[assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -24,6 +24,6 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: ComVisible(false)]

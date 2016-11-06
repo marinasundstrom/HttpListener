@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 
-#if WINDOWS_UWP || UAP10_0
+#if WINDOWS_UWP
 using Windows.Networking.Sockets;
 #endif
 namespace System.Net.Http
@@ -64,7 +64,7 @@ namespace System.Net.Http
             }
         }
 
-#if DNXCORE50
+#if NETCore
 
         /// <summary>
         /// Gets the underlying Socket.
@@ -79,7 +79,7 @@ namespace System.Net.Http
 
 #endif
 
-#if WINDOWS_UWP || UAP10_0
+#if WINDOWS_UWP
 
         /// <summary>
         /// Gets the underlying StreamSocketListener.
@@ -123,10 +123,10 @@ namespace System.Net.Http
         {
             try
             {
-#if DNXCORE50
+#if NETCore
                 _tcpListener.Start();
 #endif
-#if WINDOWS_UWP || UAP10_0
+#if WINDOWS_UWP
                 await _tcpListener.StartAsync();
 #endif
                 while (_isListening)
