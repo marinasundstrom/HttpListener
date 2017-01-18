@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace System.Net.Http
 {
@@ -53,21 +50,21 @@ namespace System.Net.Http
         {
             base.InsertItem(index, item);
 
-            Headers[HeaderName] = this.ToString();
+            Headers[HeaderName] = ToString();
         }
 
         protected override void ClearItems()
         {
             base.ClearItems();
 
-            Headers[HeaderName] = this.ToString();
+            Headers[HeaderName] = ToString();
         }
 
         protected override void RemoveItem(int index)
         {
             base.RemoveItem(index);
 
-            Headers[HeaderName] = this.ToString();
+            Headers[HeaderName] = ToString();
         }
 
         protected override void SetItem(int index, T item)
@@ -75,7 +72,7 @@ namespace System.Net.Http
             base.SetItem(index, item);
 
 
-            Headers[HeaderName] = this.ToString();
+            Headers[HeaderName] = ToString();
         }
         public override string ToString()
         {

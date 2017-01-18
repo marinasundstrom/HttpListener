@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Net.Http.Abstractions;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,8 +33,8 @@ namespace System.Net.Http
             string requestMethod = requestLines[0].TrimEnd('\r');
             string[] requestParts = requestMethod.Split(' ');
 
-            LocalEndpoint = (System.Net.IPEndPoint)localEndpoint;
-            RemoteEndpoint = (System.Net.IPEndPoint)remoteEnpoint;
+            LocalEndpoint = (IPEndPoint)localEndpoint;
+            RemoteEndpoint = (IPEndPoint)remoteEnpoint;
 
             var lines = request.ToString().Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 

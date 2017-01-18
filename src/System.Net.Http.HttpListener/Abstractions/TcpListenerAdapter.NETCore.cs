@@ -1,9 +1,6 @@
-﻿#if NETCore
+﻿#if NETSTANDARD
 
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
@@ -57,17 +54,17 @@ namespace System.Net.Http.Abstractions
 
         public Stream GetInputStream()
         {
-            return this.tcpClient.GetStream();
+            return tcpClient.GetStream();
         }
 
         public Stream GetOutputStream()
         {
-            return this.tcpClient.GetStream();
+            return tcpClient.GetStream();
         }
 
         public void Dispose()
         {
-            this.tcpClient.Dispose();
+            tcpClient.Dispose();
         }
     }
 }

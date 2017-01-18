@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace System.Net.Http
 {   
@@ -55,8 +51,8 @@ namespace System.Net.Http
 
         public HttpValue(string key, string value)
         {
-            this.Key = key;
-            this.Value = value;
+            Key = key;
+            Value = value;
         }
 
         public string Key { get; set; }
@@ -80,7 +76,7 @@ namespace System.Net.Http
         {
             if (!string.IsNullOrEmpty(query))
             {
-                this.FillFromString(query, urlencoded);
+                FillFromString(query, urlencoded);
             }
         }
 
@@ -100,7 +96,7 @@ namespace System.Net.Http
 
         public void Add(string key, string value)
         {
-            this.Add(new HttpValue(key, value));
+            Add(new HttpValue(key, value));
         }
 
         public bool ContainsKey(string key)
@@ -117,22 +113,22 @@ namespace System.Net.Http
         {
             this.Where(x => string.Equals(x.Key, key, StringComparison.OrdinalIgnoreCase))
                 .ToList()
-                .ForEach(x => this.Remove(x));
+                .ForEach(x => Remove(x));
         }
 
         public override string ToString()
         {
-            return this.ToString(true);
+            return ToString(true);
         }
 
         public virtual string ToString(bool urlencoded)
         {
-            return this.ToString(urlencoded, null);
+            return ToString(urlencoded, null);
         }
 
         public virtual string ToString(bool urlencoded, IDictionary excludeKeys)
         {
-            if (this.Count == 0)
+            if (Count == 0)
             {
                 return string.Empty;
             }
@@ -218,16 +214,16 @@ namespace System.Net.Http
 
                 if (urlencoded)
                 {
-                    this.Add(Uri.UnescapeDataString(str), Uri.UnescapeDataString(str2));
+                    Add(Uri.UnescapeDataString(str), Uri.UnescapeDataString(str2));
                 }
                 else
                 {
-                    this.Add(str, str2);
+                    Add(str, str2);
                 }
 
                 if ((i == (num - 1)) && (query[i] == '&'))
                 {
-                    this.Add(null, string.Empty);
+                    Add(null, string.Empty);
                 }
             }
         }

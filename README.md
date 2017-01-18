@@ -18,7 +18,7 @@ Contributions are most welcome.
 
 The solution consists of two projects with a common core targetting:
 
-1. .NET Core project (DNXCore) - Windows, Linux and Mac OS X.
+1. .NET Core project - Windows, Linux and Mac OS X.
 2. Universal Windows Platform (UWP) - Windows 10 and up.
 
 The API:s are generally similar, but may differ slightly on each platform due to their respective API constraints. However, the core concepts remain the same.

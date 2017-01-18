@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Net.Http.Abstractions;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,7 +14,7 @@ namespace System.Net.Http
             Headers = new HttpListenerResponseHeaders(this);
 
             this.client = client;
-            this.Request = request;
+            Request = request;
         }
 
         internal void Initialize()
