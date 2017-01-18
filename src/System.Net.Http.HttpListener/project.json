@@ -5,10 +5,7 @@
     "packOptions": {
         "licenseUrl": "https://github.com/robertsundstrom/HttpListener/blob/master/LICENSE.md",
         "projectUrl": "https://github.com/robertsundstrom/HttpListener",
-        "tags": [ "Http", "Web Server" ],
-        "files": [
-            "%project:Directory%\\bin\\Release\\uap10.0\\*.dll"
-        ]
+        "tags": [ "Http", "Web Server" ]
     },
 
     "frameworks": {
@@ -23,6 +20,17 @@
                 "System.Linq": "4.3.0",
                 "System.Net.Http": "4.3.0",
                 "System.Net.Sockets": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0",
+                "System.Runtime.InteropServices": "4.3.0",
+                "System.Threading.Tasks": "4.3.0"
+            }
+        },
+        "uap10.0" : {
+            "dependencies": {
+                "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
+                "System.Collections": "4.3.0",
+                "System.IO": "4.3.0",
+                "System.Linq": "4.3.0",
                 "System.Runtime.Extensions": "4.3.0",
                 "System.Runtime.InteropServices": "4.3.0",
                 "System.Threading.Tasks": "4.3.0"

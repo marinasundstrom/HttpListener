@@ -127,10 +127,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\System.Net.Http.HttpListener.UAP\System.Net.Http.HttpListener.UAP.csproj">
-      <Project>{2f531e97-e842-4fd7-a3bf-8abfa9db1719}</Project>
-      <Name>System.Net.Http.HttpListener.UAP</Name>
-    </ProjectReference>
+    <Reference Include="System.Net.Http.HttpListener">
+      <HintPath>..\System.Net.Http.HttpListener\bin\$(Configuration)\uap10.0\System.Net.Http.HttpListener.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

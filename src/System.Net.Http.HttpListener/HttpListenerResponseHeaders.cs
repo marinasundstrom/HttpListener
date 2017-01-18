@@ -16,7 +16,7 @@
             {
                 if (location == null)
                 {
-                    var locationString = string.Empty;
+                    string locationString;
                     if (TryGetValue("Location", out locationString))
                     {
                         location = new Uri(locationString);
@@ -39,17 +39,7 @@
 
         #region Content Headers
 
-        public HttpListenerHeaderValueCollection<string> ContentEncoding
-        {
-            get
-            {
-                if (contentEncoding == null)
-                {
-                    contentEncoding = new HttpListenerHeaderValueCollection<string>(this, "Content-Encoding");
-                }
-                return contentEncoding;
-            }
-        }
+        public HttpListenerHeaderValueCollection<string> ContentEncoding => contentEncoding ?? (contentEncoding = new HttpListenerHeaderValueCollection<string>(this, "Content-Encoding"));
 
         internal HttpListenerResponse Response { get; set; }
 

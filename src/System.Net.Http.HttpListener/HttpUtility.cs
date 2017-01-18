@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace System.Net.Http
-{   
+{
     /**
     /* Source: http://stackoverflow.com/questions/20268544/portable-class-library-pcl-version-of-httputility-parsequerystring
     **/
@@ -45,10 +45,6 @@ namespace System.Net.Http
 
     public sealed class HttpValue
     {
-        public HttpValue()
-        {
-        }
-
         public HttpValue(string key, string value)
         {
             Key = key;
@@ -62,15 +58,6 @@ namespace System.Net.Http
     public class HttpValueCollection : Collection<HttpValue>
     {
         #region Constructors
-
-        public HttpValueCollection()
-        {
-        }
-
-        public HttpValueCollection(string query)
-            : this(query, true)
-        {
-        }
 
         public HttpValueCollection(string query, bool urlencoded)
         {
