@@ -1,27 +1,40 @@
 {
-  "version": "1.0.1-*",
-  "authors": [ "Robert Sundstr�m" ],
-  "copyright": "Copyright � Robert Sundstr�m 2016",
-  "packOptions": {
-    "licenseUrl": "https://github.com/robertsundstrom/HttpListener/blob/master/LICENSE.md",
-    "projectUrl": "https://github.com/robertsundstrom/HttpListener",
-    "tags": [ "Http", "Web Server" ]
-  },
-  "buildOptions": {
-    "debugType": "portable",
-    "emitEntryPoint": false,
-    "define": [ "NETCore" ]
-  },
-  "dependencies": {},
-  "frameworks": {
-    "netcoreapp1.0": {
-      "dependencies": {
-        "Microsoft.NETCore.App": {
-          "type": "default",
-          "version": "1.0.0"
+    "version": "1.0.1.1",
+    "authors": [ "Robert Sundström", "Stef Heyenrath" ],
+    "copyright": "Copyright © Robert Sundström 2016",
+    "packOptions": {
+        "licenseUrl": "https://github.com/robertsundstrom/HttpListener/blob/master/LICENSE.md",
+        "projectUrl": "https://github.com/robertsundstrom/HttpListener",
+        "tags": [ "Http", "Web Server" ]
+    },
+
+    "frameworks": {
+        "netstandard1.3": {
+            "buildOptions": { "define": [ "NETSTANDARD" ] },
+            "imports": [
+                "dotnet5.4"
+            ],
+            "dependencies": {
+                "System.Collections": "4.3.0",
+                "System.IO": "4.3.0",
+                "System.Linq": "4.3.0",
+                "System.Net.Http": "4.3.0",
+                "System.Net.Sockets": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0",
+                "System.Runtime.InteropServices": "4.3.0",
+                "System.Threading.Tasks": "4.3.0"
+            }
+        },
+        "uap10.0" : {
+            "dependencies": {
+                "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2",
+                "System.Collections": "4.3.0",
+                "System.IO": "4.3.0",
+                "System.Linq": "4.3.0",
+                "System.Runtime.Extensions": "4.3.0",
+                "System.Runtime.InteropServices": "4.3.0",
+                "System.Threading.Tasks": "4.3.0"
+            }
         }
-      },
-      "imports": "dnxcore50"
     }
-  }
 }

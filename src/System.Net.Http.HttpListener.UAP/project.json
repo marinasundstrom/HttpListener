@@ -1,18 +1,23 @@
 ﻿{
   "version": "1.0.1-*",
-  "authors": [ "Robert Sundstr�m" ],
+  "authors": [
+    "Robert Sundstr�m"
+  ],
   "copyright": "Copyright � Robert Sundstr�m 2016",
   "packOptions": {
     "licenseUrl": "https://github.com/robertsundstrom/HttpListener/blob/master/LICENSE.md",
     "projectUrl": "https://github.com/robertsundstrom/HttpListener",
-    "tags": [ "Http", "Web Server" ]
+    "tags": [
+      "Http",
+      "Web Server"
+    ]
   },
   "buildOptions": {
     "debugType": "portable",
     "emitEntryPoint": false
   },
   "dependencies": {
-    "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0"
+    "Microsoft.NETCore.UniversalWindowsPlatform": "5.2.2"
   },
   "frameworks": {
     "uap10.0": {}

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Net.Http.Abstractions;
-using System.Net.Sockets;
+﻿using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,7 +13,7 @@ namespace System.Net.Http
             Headers = new HttpListenerResponseHeaders(this);
 
             this.client = client;
-            this.Request = request;
+            Request = request;
         }
 
         internal void Initialize()
@@ -63,7 +60,7 @@ namespace System.Net.Http
             var socketStream = client.GetOutputStream();
 
             string header = $"{Version} {StatusCode} {ReasonPhrase}\r\n" +
-                            Headers.ToString() +
+                            Headers +
                             $"Content-Length: {outputStream.Length}\r\n" +
                             "\r\n";
 

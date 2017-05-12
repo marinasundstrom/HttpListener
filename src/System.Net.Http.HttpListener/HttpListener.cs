@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http.Abstractions;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 
-#if WINDOWS_UWP
-using Windows.Networking.Sockets;
-#endif
 namespace System.Net.Http
 {
     /// <summary>
@@ -21,7 +13,7 @@ namespace System.Net.Http
     public sealed class HttpListener : IDisposable
     {
         Task _listener;
-        private TcpListenerAdapter _tcpListener;
+        private readonly TcpListenerAdapter _tcpListener;
         CancellationTokenSource _cts;
         private bool disposedValue = false; // To detect redundant calls
         private bool _isListening;
@@ -32,79 +24,46 @@ namespace System.Net.Http
         }
 
         /// <summary>
-        /// Initializes a HttpListener.
+        /// Initializes a new instance of the <see cref="HttpListener"/> class.
         /// </summary>
-        /// <param name="endpoint"></param>
+        /// <param name="address">The address.</param>
+        /// <param name="port">The port.</param>
         public HttpListener(IPAddress address, int port) : this()
         {
-            LocalEndpoint = new IPEndPoint(
-                 address,
-                 port);
+            LocalEndpoint = new IPEndPoint(address, port);
 
             _tcpListener = new TcpListenerAdapter(LocalEndpoint);
         }
 
         /// <summary>
-        /// Initializes a HttpListener with an IPEndPoint.
+        /// Initializes a new instance of the <see cref="HttpListener"/> class.
         /// </summary>
-        /// <param name="endpoint"></param>
+        /// <param name="endpoint">The endpoint.</param>
         public HttpListener(IPEndPoint endpoint) : this()
         {
-            _tcpListener = new TcpListenerAdapter(LocalEndpoint);
+            _tcpListener = new TcpListenerAdapter(endpoint);
         }
 
         /// <summary>
         /// Gets a value indicating whether the HttpListener is running or not.
         /// </summary>
-        public bool IsListening
-        {
-            get
-            {
-                return _isListening;
-            }
-        }
-
-#if NETCore
+        public bool IsListening => _isListening;
 
         /// <summary>
         /// Gets the underlying Socket.
         /// </summary>
-        public Socket Socket
-        {
-            get
-            {
-                return _tcpListener.Socket;
-            }
-        }
-
-#endif
-
-#if WINDOWS_UWP
+        public Socket Socket => _tcpListener.Socket;
 
         /// <summary>
-        /// Gets the underlying StreamSocketListener.
-        /// </summary>
-        public StreamSocketListener StreamSocketListener
-        {
-            get
-            {
-                return _tcpListener.StreamSocketListener;
-            }
-        }
-
-#endif
-
-        /// <summary>
-        /// Gets the local endpoint on which the listener is running.
+        /// Gets the local endpoint on which the StartListenerAsync is running.
         /// </summary>
         public IPEndPoint LocalEndpoint
         {
             get;
-            private set;
         }
 
         /// <summary>
-        /// Starts the listener.
+        /// Starts the StartListenerAsync.
         /// </summary>
         public void Start()
         {
@@ -116,24 +75,20 @@ namespace System.Net.Http
 
             _cts = new CancellationTokenSource();
             _isListening = true;
-            _listener = Task.Run(listener, _cts.Token);
+            _listener = Task.Run(StartListenerAsync, _cts.Token);
         }
 
-        private async Task listener()
+        private async Task StartListenerAsync()
         {
             try
             {
-#if NETCore
                 _tcpListener.Start();
-#endif
-#if WINDOWS_UWP
-                await _tcpListener.StartAsync();
-#endif
+
                 while (_isListening)
                 {
                     // Await request.
 
-                    var client = await _tcpListener.AcceptTcpClientAsync();
+                    var client = await _tcpListener.AcceptTcpClientAsync().ConfigureAwait(false);
 
                     var request = new HttpListenerRequest(client);
 
@@ -184,7 +139,7 @@ namespace System.Net.Http
         }
 
         /// <summary>
-        /// Closes the listener.
+        /// Closes the StartListenerAsync.
         /// </summary>
         public void Close()
         {
@@ -192,10 +147,21 @@ namespace System.Net.Http
                 throw new InvalidOperationException("HttpListener is not running.");
 
             Request = null;
+
             _cts.Cancel();
             _cts = null;
+
             _isListening = false;
             _tcpListener.Stop();
+
+            try
+            {
+                // Stop task
+                _listener.Wait(TimeSpan.FromMilliseconds(1));
+            }
+            catch (Exception)
+            {
+            }
         }
 
         /// <summary>
@@ -255,34 +221,6 @@ namespace System.Net.Http
             // GC.SuppressFinalize(this);
         }
         #endregion
-    }
-
-    public class HttpListenerContext
-    {
-        private readonly HttpListenerRequest request;
-        private readonly HttpListenerResponse response;
-
-        public HttpListenerContext(HttpListenerRequest request, HttpListenerResponse response)
-        {
-            this.request = request;
-            this.response = response;
-        }
-
-        public HttpListenerRequest Request
-        {
-            get
-            {
-                return request;
-            }
-        }
-
-        public HttpListenerResponse Response
-        {
-            get
-            {
-                return response;
-            }
-        }
     }
 }
 

@@ -1,41 +1,30 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using Windows.UI.Popups;
-using Windows.UI.Xaml.Controls;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
-namespace TestApp
+namespace TestConsoleApp
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class MainPage : Page
+    public class Program
     {
-        private HttpListener listener;
-
-        public Uri Url { get; private set; }
-
-        public MainPage()
-        {
-            this.InitializeComponent();
-
-            Initialize();
-        }
-
-        private void Initialize()
+        public static void Main(string[] args)
         {
             int port = 18081;
 
-            listener = new HttpListener(IPAddress.Any, port);
-            listener.Request += requestHandler;
+            var listener = new HttpListener(IPAddress.Any, port);
+            listener.Request += HandleRequest;
             listener.Start();
 
             bool isListening = listener.IsListening;
+            Console.WriteLine("isListening = {0}", isListening);
+
+            Console.WriteLine("Press any key to stop listener");
+            
+            Console.ReadKey();
+            listener.Close();
+            listener.Dispose();
         }
 
-        private async void requestHandler(object sender, HttpListenerRequestEventArgs e)
+        private static async void HandleRequest(object sender, HttpListenerRequestEventArgs e)
         {
             var request = e.Request;
             var response = e.Response;
@@ -57,15 +46,11 @@ namespace TestApp
                 var data = await request.ReadUrlEncodedContentAsync();
                 var name = data["name"];
 
-                var content = $"<h2>Hi, {name}! Nice to meet you.</h2>";
+                string content = $"<h2>Hi, {name}! Nice to meet you.</h2>";
 
                 await response.WriteContentAsync(MakeDocument(content));
 
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
-                {
-                    var dialog = new MessageDialog($"Hi, {name}! Nice to meet you.");
-                    await dialog.ShowAsync();
-                });
+                Console.WriteLine($"--> Hi, {name}! Nice to meet you.");
             }
             else
             {
@@ -75,7 +60,7 @@ namespace TestApp
             response.Close();
         }
 
-        private string MakeDocument(object content)
+        private static string MakeDocument(object content)
         {
             return @"<html>
                         <head>
@@ -85,11 +70,6 @@ namespace TestApp
                             content +
                         @"</body>
                     </html>";
-        }
-
-        ~MainPage()
-        {
-            listener.Close();
         }
     }
 }
