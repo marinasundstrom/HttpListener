@@ -12,7 +12,7 @@ namespace System.Net.Http
         private TcpClientAdapter client;
         
         // Request regex developed by DMP9 Labs
-        internal static string requestRegex = "^(?<method>GET|HEAD|POST|PUT|DELETE|OPTIONS|TRACE|PATCH).(?<url>.*).(?<version>(HTTP\/1\.1|HTTP\/1\.0))$";
+        internal static string requestRegex = @"^(?<method>GET|HEAD|POST|PUT|DELETE|OPTIONS|TRACE|PATCH).(?<url>.*).(?<version>(HTTP\/1\.1|HTTP\/1\.0))$";
 
         internal HttpListenerRequest(TcpClientAdapter client)
         {
@@ -47,10 +47,15 @@ namespace System.Net.Http
             Regex regex = new Regex(requestRegex);
             Match m = regex.Match(line);
             
-            var url = new UriBuilder(Headers.Host + regex.Groups["url"]).Uri;
-            var httpMethod = regex.Groups["method"];
+            if (!m.Successful)
+            {
+                throw new Exception("Invalid request -- couldn't match request line to regex");
+            }
+            
+            var url = new UriBuilder(Headers.Host + m.Groups["url"]).Uri;
+            var httpMethod = m.Groups["method"];
 
-            Version = regex.Groups["version"];
+            Version = m.Groups["version"];
             Method = httpMethod;
             RequestUri = url;
         }
