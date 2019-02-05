@@ -1,14 +1,18 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace System.Net.Http
 {
     public sealed class HttpListenerRequest
     {
         private TcpClientAdapter client;
+        
+        // Request regex developed by DMP9 Labs
+        internal static string requestRegex = @"^(?<method>GET|HEAD|POST|PUT|DELETE|OPTIONS|TRACE|PATCH).(?<url>.*).(?<version>(HTTP\/1\.1|HTTP\/1\.0))$";
 
         internal HttpListenerRequest(TcpClientAdapter client)
         {
@@ -26,12 +30,6 @@ namespace System.Net.Http
             var localEndpoint = client.LocalEndPoint;
             var remoteEnpoint = client.RemoteEndPoint;
 
-            // This code needs to be rewritten and simplified.
-
-            var requestLines = request.ToString().Split('\n');
-            string requestMethod = requestLines[0].TrimEnd('\r');
-            string[] requestParts = requestMethod.Split(' ');
-
             LocalEndpoint = (IPEndPoint)localEndpoint;
             RemoteEndpoint = (IPEndPoint)remoteEnpoint;
 
@@ -45,12 +43,19 @@ namespace System.Net.Http
 
         private void ParseRequestLine(string[] lines)
         {
-            var line = lines.ElementAt(0).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var line = lines.ElementAt(0);
+            Regex regex = new Regex(requestRegex);
+            Match m = regex.Match(line);
+            
+            if (!m.Successful)
+            {
+                throw new Exception("Invalid request -- couldn't match request line to regex");
+            }
+            
+            var url = new UriBuilder(Headers.Host + m.Groups["url"]).Uri;
+            var httpMethod = m.Groups["method"];
 
-            var url = new UriBuilder(Headers.Host + line[1]).Uri;
-            var httpMethod = line[0];
-
-            Version = line[2];
+            Version = m.Groups["version"];
             Method = httpMethod;
             RequestUri = url;
         }
